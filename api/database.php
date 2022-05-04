@@ -8,8 +8,6 @@ class Database {
  private $password = "";
  protected $pdo;
 
-
-
  public function getPdo()
  {
          $this->pdo = new PDO("mysql:host=" . $this->host.";dbname=".$this->db_name, $this->username, $this->password, [

@@ -1,9 +1,9 @@
 <?php
 
-$url = "http://localhost/MDM/api/products/1"; // modifier le produit 1
+$url = "http://localhost/MDM/api/products/7"; // modifier le produit 7
 $data = array(
  'code' => 'TVF',
- 'description' => 'Thé vert saveur framboise en sachets',
+ 'description' => 'The vert saveur framboise en sachets',
  'price' => '149',
  'category_id' => '4',
  'statut_id' => '2',
