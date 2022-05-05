@@ -1,12 +1,12 @@
 <?php
 
-class Database {
+abstract class Database {
  // Connexion à la base de données
  private $host = "localhost";
- private $db_name = "micromarket";
- private $username = "root";
- private $password = "";
- protected $pdo;
+ private  $db_name = "micromarket";
+ private  $username = "root";
+ private  $password = "";
+ protected  $pdo;
 
  public function getPdo()
  {

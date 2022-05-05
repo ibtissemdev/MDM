@@ -1,31 +1,33 @@
 <?php
-require_once "database.php";
-$connection = new Database;
-$pdo = $connection->getPdo();
-
+require_once "controllers/controllerProduct.php";
+$controller = new ControllerProduct;
+var_dump($_SERVER['REQUEST_METHOD']);
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         if (isset($_GET['id'])) {
             $url = explode('/', filter_var($_GET['id']), FILTER_SANITIZE_URL);
-            error_log(print_r(($url[0]), 1));
-            if (!empty($url[1])) {
-                
-                $sth = $pdo->prepare("SELECT * From produits WHERE id_product=$url[1]");
-                $sth->execute();
-                $resultat = $sth->fetch(); 
-                echo "<pre>", print_r($resultat), "</pre>";
+            if (!empty($url[1]) && $url[0]=='display' ) {
+                $controller->afficherUn($url[1]);
+                // $sth = $this->getPdo->prepare("SELECT * From produits WHERE id_product=$url[1]");
+                // $sth->execute();
+                // $resultat = $sth->fetch();
+                // echo "<pre>", print_r($resultat), "</pre>";
             } else if ($url[0] == 'products') {
-                $url = explode('/', filter_var($_GET['id']), FILTER_SANITIZE_URL);
+                // $url = explode('/', filter_var($_GET['id']), FILTER_SANITIZE_URL);
                 // if($url[0]=='products'){
-                $sth = $pdo->prepare("SELECT * From produits ");
-                $sth->execute();
-                $resultat = $sth->fetchAll(); //Afficher toutes les entrées (un tableau) dans le tableau
-                echo "<pre>", print_r($resultat), "</pre>";
-                error_log(print_r(($resultat), 1));
-                // }
-            }
-        }
+                $controller->afficherTout();
+            } else if ($url[0] == 'delete' && !empty($url[1])) {
+                $controller->supprimer($url[1]);
+            } else if ($url[0] == 'update' && !empty($url[1])) {
+                $controller->miseAJour($url[1]);
+               if (!empty($url[2])) {
+                 
+                require "request.php";
+
+               }
+             
+        }}
         break;
 
     case 'POST':
@@ -33,9 +35,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $champs = [];
         $values = [];
         foreach ($_POST as $key => $value) {
-                $keys[] = $key;
-                $champs[] = '?';
-                $values[] = $value;
+            $keys[] = $key;
+            $champs[] = '?';
+            $values[] = $value;
         }
         $keys = implode(",", $keys);
         $champs = implode(",", $champs);
@@ -49,21 +51,21 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $result = $sth->fetch(); //récupère le category_id de la dernière entrée
 
         //echo "<pre>", print_r($result), "</pre>";
-        $category_id = $result['category_id']; 
-       // echo $category_id;
+        $category_id = $result['category_id'];
+        // echo $category_id;
 
         $code = $result['code'];
 
         $sth = $pdo->prepare("INSERT INTO  liaison_categorie (category_id, produits_id) VALUES ($category_id,$produits_id)");
         $sth->execute();
-       // error_log(print_r($sth, 1));
+        // error_log(print_r($sth, 1));
 
         //REmpli la table de liason assets
         $sth = $pdo->prepare("SELECT id_assets From assets WHERE nom_fichier LIKE '%$code%'");
         $sth->execute();
         $result = $sth->fetch(); //récupère le category_id de la dernière entrée
 
-        $id_assets=$result['id_assets'];
+        $id_assets = $result['id_assets'];
         $sth = $pdo->prepare("INSERT INTO  liaison_assets (produits_id,assets_id,drapeau) VALUES ($produits_id,$id_assets,1)");
         $sth->execute();
 
@@ -78,9 +80,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $values = [];
 
             foreach ($PUT as $key => $value) {
-                    $keys[] = "$key = ?";
-                    $values[] = $value;
-          
+                $keys[] = "$key = ?";
+                $values[] = $value;
             }
             $keys = implode(",", $keys);
             error_log(print_r($keys, 1));
@@ -94,6 +95,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'DELETE':
         if (isset($_GET['id'])) {
             $url = explode('/', filter_var($_GET['id']), FILTER_SANITIZE_URL);
+            $controller->supprimer($url[1]);
             $sth = $pdo->prepare("DELETE FROM produits  WHERE id_product=$url[1]");
             $sth->execute();
         }
@@ -106,18 +108,18 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $keys = [];
             $champs = [];
             $values = [];
-        foreach ($DUPLICATE as $key => $value) {
-             
+            foreach ($DUPLICATE as $key => $value) {
+
                 $keys[] = $key;
                 $champs[] = '?';
                 $values[] = $value;
-        }
-        $keys = implode(",", $keys);
-        $champs = implode(",", $champs);
-        $sth = $pdo->prepare("INSERT INTO produits ($keys) VALUES ($champs) ON DUPLICATE KEY UPDATE id_product =id_product+1");
-        var_dump($sth);
+            }
+            $keys = implode(",", $keys);
+            $champs = implode(",", $champs);
+            $sth = $pdo->prepare("INSERT INTO produits ($keys) VALUES ($champs) ON DUPLICATE KEY UPDATE id_product =id_product+1");
+            var_dump($sth);
             $sth->execute($values); //Duplique une entrée
-        
+
         }
         break;
     default:
