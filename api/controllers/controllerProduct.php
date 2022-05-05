@@ -10,7 +10,6 @@ public function __construct()
 {
     $this->productsManager= new ManagerProduct();
     $this->productsManager->chargementProducts();
-
 }
 
 public function supprimer($id){
@@ -24,11 +23,13 @@ $products=$this->productsManager->viewAssets();
     require "./views/displayAll.php";
 }
  public function afficherUn($id) {
-    $this->productsManager->displayOne($id);
+    $product=$this->productsManager->viewAssets($id);
+    echo "<pre>",print_r($product),"</pre>"; 
+    require './views/displayOne.php';
+    
  }
 
 public function miseAJour($id){//afficher le produit à modifier
-
     $this->productsManager->update($id);
 }
 
@@ -38,9 +39,5 @@ public function miseAJourRequete ($id_product,$id_statut) { //On modifie le stat
 
 public function getProductsManager() { return $this->productsManager;}
 public function setProductsManager($productsManager) { $this->productsManager = $productsManager; return $this;
-}
-
-public function recupImage($code){
-   return $this->productsManager->assets($code);
 }
 }

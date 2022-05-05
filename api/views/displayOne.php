@@ -16,20 +16,20 @@ ob_start(); ?>
     </tr>
  
         <tr>
-            <td><img src="http://localhost/MDM/api/assets/<?=$product['code'].'-01.jpg'?>" alt="photo du produit"></td>
-            <td><?= $product['description'] ?></td>
-            <td><?= $product['price'] ?></td>
-            <td><?= $product['purchase_date'] ?></td>
-            <td><?= $product['category_id'] ?></td>
-            <td><?= $product['statut_id'] ?></td>
-            <td><a href=""><button>Modification</button></a>
-                <a href="http://localhost/MDM/api/delete/<?= $product['id_product'] ?>"><button>Suppression</button></a>
+            <td><img src="<?=CHEMIN.$product[0]['chemin'].$product[0]['nom_fichier']?>" alt="photo du produit"></td>
+            <td><?= $product[0]['description'] ?></td>
+            <td><?= $product[0]['price'] ?></td>
+            <td><?= $product[0]['purchase_date'] ?></td>
+            <td><?= $product[0]['category_id'] ?></td>
+            <td><?= $product[0]['statut_id'] ?></td>
+            <td><a href="<?=CHEMIN?>products/"><button>retour</button></a>
+                <a href="<?=CHEMIN?>delete/<?= $product[0]['id_product'] ?>"><button>Suppression</button></a>
             </td>
         </tr>
 
 </table>
 <?php
 $content = ob_get_clean();
-$title="afficher". $product['description'];
+$title="afficher". $product[0]['description'];
 require 'layout.php';
 ?>

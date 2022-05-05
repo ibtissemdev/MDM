@@ -25,7 +25,7 @@ ob_start(); ?>
            // echo "<pre>",print_r($produits),"</pre>"; 
    ?>
         <tr>
-        <td><img src="<?='http://localhost/MDM/api/'.$product['chemin'].$product['nom_fichier']?>" alt="<?= $product['description'] ?>"> </td>
+        <td><img src="<?=CHEMIN.$product['chemin'].$product['nom_fichier']?>" alt="<?= $product['description'] ?>"> </td>
         <?php error_log(print_r($product,1));
       
         ?>
@@ -34,9 +34,9 @@ ob_start(); ?>
             <td><?= $product['purchase_date'] ?></td>
             <td><?= $product['category_id'] ?></td>
             <td><?= $product['statut_id'] ?></td>
-            <td><a href="http://localhost/MDM/api/update/<?= $product['id_product'] ?>"><button>Modification</button></a>
-                <a href="http://localhost/MDM/api/delete/<?= $product['id_product'] ?>"><button>Suppression</button></a>
-                <a href="http://localhost/MDM/api/display/<?= $product['id_product'] ?>"><button>Afficher</button></a>
+            <td><a href="<?=CHEMIN?>update/<?= $product['id_product'] ?>"><button>Modification</button></a>
+                <a href="<?=CHEMIN?>delete/<?= $product['id_product'] ?>"><button>Suppression</button></a>
+                <a href="<?=CHEMIN?>display/<?= $product['id_product'] ?>"><button>Afficher</button></a>
             </td>
         </tr>
     <?php endforeach ?>

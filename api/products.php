@@ -1,4 +1,7 @@
 <?php
+//constante que l'on peut utiliser dans tout le site
+define("CHEMIN", str_replace("products.php", "", (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
+
 require_once "controllers/controllerProduct.php";
 $controller = new ControllerProduct;
 var_dump($_SERVER['REQUEST_METHOD']);
@@ -88,7 +91,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             }
             $keys = implode(",", $keys);
             error_log(print_r($keys, 1));
-            $sth = $pdo->prepare("UPDATE produits SET $keys WHERE id_product =$url[1]");
+            $sth = $conn->prepare("UPDATE produits SET $keys WHERE id_product =$url[1]");
             error_log(print_r($sth, 1));
             $sth->execute($values);
         }
@@ -99,7 +102,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         if (isset($_GET['id'])) {
             $url = explode('/', filter_var($_GET['id']), FILTER_SANITIZE_URL);
             $controller->supprimer($url[1]);
-            $sth = $pdo->prepare("DELETE FROM produits  WHERE id_product=$url[1]");
+            $sth = $conn->prepare("DELETE FROM produits  WHERE id_product=$url[1]");
             $sth->execute();
         }
         break;

@@ -1,5 +1,5 @@
 <?php
-$url = "http://localhost/MDM/api/products/7"; // dupliquer le produit 7
+$url = "http://localhost/MDM/api/products/37"; // dupliquer le produit 7
 $data = array(
  'code' => 'TVF2',
  'description' => 'Thé vert saveur framboise en sachets',

@@ -1,6 +1,3 @@
-<?php
-define("CHEMIN",)
-?>
 
 <!DOCTYPE html>
 <html lang="fr">

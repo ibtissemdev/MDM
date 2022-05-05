@@ -17,7 +17,7 @@ class ManagerProduct extends Database
     }
     public function chargementProducts()
     {
-        $mesProducts = $this->selectAll();
+        $mesProducts = $this->viewAssets();
         //var_dump($mesProducts);
         foreach ($mesProducts as $product) {
             $p = new Product($product);
@@ -25,42 +25,26 @@ class ManagerProduct extends Database
             //  echo "<pre>",print_r($p),"</pre>";     
         }
     }
-    //Method GET
-    public function selectAll()
-    { //echo "<pre>",print_r($this->products),"</pre>";  
-        $sth = $this->getPdo()->prepare("SELECT * From produits ");
-        $sth->execute();
-        $resultat = $sth->fetchAll(); //Afficher toutes les entrées (un tableau) dans le tableau
-        return $resultat;
-
-    }
-
-    public function selectById($id)
-    {
-        $sth = $this->getPdo()->prepare("SELECT * From produits WHERE id_product=$id");
-        $sth->execute();
-        $resultat = $sth->fetch();
-        return $resultat;
-    }
+   
     //Methode DELETE
     public function delete($id)
     {
         $sth =  $this->getPdo()->prepare("DELETE FROM produits  WHERE id_product=$id");
         $sth->execute();
-        $products = $this->selectAll();
+        $products = $this->viewAssets();
         require './views/displayAll.php';
         return 'Produit supprimé';
     }
     public function displayOne($id)
     {
-        $product = $this->selectById($id);
-        require './views/displayOne.php';
+        $product = $this->viewAssets($id);
+  
     }
 
 
     public function displayAll()
     {
-        $products = $this->selectAll();
+        $products = $this->viewAssets();
         $products[] = $this->viewAssets($products['code']);
         require './views/displayAll.php';
         //  print_r ($products);
@@ -68,7 +52,7 @@ class ManagerProduct extends Database
 
     public function update($id)
     { //afficher le produit à modifier
-        $product = $this->selectById($id);
+        $product = $this->viewAssets($id);
         require './views/modification.php';
     }
 
@@ -80,27 +64,30 @@ class ManagerProduct extends Database
         return 'update requête traitée';
     }
 
-
-    public function viewAssets()
+    public function viewAssets($id = null)
     {
-        $sth = $this->getPdo()->prepare("SELECT * From produits");
-        $sth->execute();
-        $resultat = $sth->fetchall();
-        
-       
-        for ($i=0;$i<count($resultat);$i++) {
-
-            $code=$resultat[$i]['code'];
-
-            $sth = $this->getPdo()->prepare("SELECT nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
+        if ($id == null) {
+            $sth = $this->getPdo()->prepare("SELECT * From produits");
             $sth->execute();
-            $result = $sth->fetch(); //récupère le category_id de la dernière entrée
- 
-            $resultat[$i]['nom_fichier']=$result['nom_fichier'];
-            $resultat[$i]['chemin']=$result['chemin'];
+            $resultat = $sth->fetchall();
+        } else {
+            $sth = $this->getPdo()->prepare("SELECT * From produits WHERE id_product=$id");
+            $sth->execute();
+            $resultat = $sth->fetchall();
+            //echo '<pre>', print_r($resultat), '</pre>';
+
         }
-       
-        echo '<pre>',print_r($result),'</pre>';
+            for ($i = 0; $i < count($resultat); $i++) {
+
+                $code = $resultat[$i]['code'];
+                $sth = $this->getPdo()->prepare("SELECT nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
+                $sth->execute();
+                $result = $sth->fetch(); //récupère le category_id de la dernière entrée
+                $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
+                $resultat[$i]['chemin'] = $result['chemin'];
+            }
+       // echo '<pre>', print_r($resultat), '</pre>';
         return $resultat;
     }
-}
+
+   }
