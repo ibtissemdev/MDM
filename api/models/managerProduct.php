@@ -60,11 +60,18 @@ $products=$this->selectAll();
      //  print_r ($products);
     }
 
-    public function update ($id) {
+    public function update ($id) { //afficher le produit à modifier
         $product=$this->selectById($id);
         require './views/modification.php';
 
     }
 
+    public function updateRequest($id_product,$statut_id) {
+        $sth = $this->getPdo()->prepare("UPDATE produits SET statut_id=$statut_id WHERE id_product =$id_product");
+        error_log(print_r($sth, 1));
+        $sth->execute();
+        return 'update requête traitée';
+
+    }
 
 }

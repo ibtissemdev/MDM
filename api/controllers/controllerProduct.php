@@ -27,10 +27,15 @@ public function afficherTout() {
     $this->productsManager->displayOne($id);
  }
 
-public function miseAJour($id){
+public function miseAJour($id){//afficher le produit à modifier
 
     $this->productsManager->update($id);
 }
 
+public function miseAJourRequete ($id_product,$id_statut) { //On modifie le statut du produit
+  return  $this->productsManager->updateRequest($id_product,$id_statut);
+    
+
+}
 
 }

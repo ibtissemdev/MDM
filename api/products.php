@@ -22,7 +22,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             } else if ($url[0] == 'update' && !empty($url[1])) {
                 $controller->miseAJour($url[1]);
                if (!empty($url[2])) {
-                 
+        
                 require "request.php";
 
                }
