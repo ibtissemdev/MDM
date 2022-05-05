@@ -14,18 +14,18 @@ private $expiration_date;
 private $photo;
 
 
-public function __construct($data)
-{//Crée un objet product
-    extract($data); 
-    $this->id_product=$id_product;
-    $this->code = $code;
-    $this->description= $description;
-    $this->price=$price;
-    $this->category_id=$category_id;
-    $this->statut_id=$statut_id;
-    $this->purchase_date=$purchase_date;
-    $this->expiration_date=$expiration_date;
-}
+// public function __construct($data)
+// {//Crée un objet product
+//     extract($data); 
+//     $this->id_product=$id_product;
+//     $this->code = $code;
+//     $this->description= $description;
+//     $this->price=$price;
+//     $this->category_id=$category_id;
+//     $this->statut_id=$statut_id;
+//     $this->purchase_date=$purchase_date;
+//     $this->expiration_date=$expiration_date;
+//     $this->photo='assets/'.$code.'-01.jpg';}
 
 public function getId_product() { return $this->id_product;}
 public function setId_product($id_product) { $this->id_product = $id_product; return $this;}
@@ -52,5 +52,7 @@ public function getExpiration_date() { return $this->expiration_date;}
 public function setExpiration_date($expiration_date) { $this->expiration_date = $expiration_date; return $this;}
 
 public function getPhoto() { return $this->photo;}
-public function setPhoto($photo) {$this->photo = $photo; return $this;}
+public function setPhoto($photo) {
+    $this->photo = 'assets/'.$this->code.'-01.jpg'; 
+    return $this->photo=$photo;}
 }

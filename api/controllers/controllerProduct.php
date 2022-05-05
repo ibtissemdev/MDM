@@ -19,9 +19,9 @@ echo $this->productsManager->delete($id);
 }
 
 public function afficherTout() {
-
-    $this->productsManager->displayAll();
-   // require "./views/displayAll.php";
+$products=$this->productsManager->viewAssets();
+//echo "<pre>",print_r($products),"</pre>"; 
+    require "./views/displayAll.php";
 }
  public function afficherUn($id) {
     $this->productsManager->displayOne($id);
@@ -34,8 +34,13 @@ public function miseAJour($id){//afficher le produit à modifier
 
 public function miseAJourRequete ($id_product,$id_statut) { //On modifie le statut du produit
   return  $this->productsManager->updateRequest($id_product,$id_statut);
-    
-
 }
 
+public function getProductsManager() { return $this->productsManager;}
+public function setProductsManager($productsManager) { $this->productsManager = $productsManager; return $this;
+}
+
+public function recupImage($code){
+   return $this->productsManager->assets($code);
+}
 }

@@ -41,32 +41,35 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         $keys = implode(",", $keys);
         $champs = implode(",", $champs);
-        $sth = $pdo->prepare("INSERT INTO  produits ($keys) VALUES ($champs)");
+        $conn=$controller->getProductsManager()->getPdo();
+        $sth = $conn->prepare("INSERT INTO  produits ($keys) VALUES ($champs)");
         $sth->execute($values);
         //Rempli la table de liaison categorie
-        $produits_id = $pdo->lastInsertId();      //Récupère l'id de la dernière entrée
+        $produits_id = $conn->lastInsertId();      //Récupère l'id de la dernière entrée
 
-        $sth = $pdo->prepare("SELECT category_id,code From produits WHERE id_product=$produits_id");
+        $sth = $conn->prepare("SELECT category_id,code From produits WHERE id_product=$produits_id");
         $sth->execute();
         $result = $sth->fetch(); //récupère le category_id de la dernière entrée
+   
 
         //echo "<pre>", print_r($result), "</pre>";
         $category_id = $result['category_id'];
+
         // echo $category_id;
 
         $code = $result['code'];
 
-        $sth = $pdo->prepare("INSERT INTO  liaison_categorie (category_id, produits_id) VALUES ($category_id,$produits_id)");
+        $sth = $conn->prepare("INSERT INTO  liaison_categorie (category_id, produits_id) VALUES ($category_id,$produits_id)");
         $sth->execute();
         // error_log(print_r($sth, 1));
 
         //REmpli la table de liason assets
-        $sth = $pdo->prepare("SELECT id_assets From assets WHERE nom_fichier LIKE '%$code%'");
+        $sth = $conn->prepare("SELECT id_assets From assets WHERE nom_fichier LIKE '%$code%'");
         $sth->execute();
         $result = $sth->fetch(); //récupère le category_id de la dernière entrée
 
         $id_assets = $result['id_assets'];
-        $sth = $pdo->prepare("INSERT INTO  liaison_assets (produits_id,assets_id,drapeau) VALUES ($produits_id,$id_assets,1)");
+        $sth = $conn->prepare("INSERT INTO  liaison_assets (produits_id,assets_id,drapeau) VALUES ($produits_id,$id_assets,1)");
         $sth->execute();
 
         break;

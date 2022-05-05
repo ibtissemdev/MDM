@@ -1,3 +1,4 @@
+
 <?php
 //tampon
 
@@ -19,9 +20,15 @@ ob_start(); ?>
 //echo "<pre>",print_r(count($products)),"</pre>";
 
     foreach($products as $product) : ?>
-   
+   <?php      
+
+           // echo "<pre>",print_r($produits),"</pre>"; 
+   ?>
         <tr>
-            <td><img src="<?= $product['description'] ?>" alt="photo du produit"></td>
+        <td><img src="<?='http://localhost/MDM/api/'.$product['chemin'].$product['nom_fichier']?>" alt="<?= $product['description'] ?>"> </td>
+        <?php error_log(print_r($product,1));
+      
+        ?>
             <td><?= $product['description'] ?></td>
             <td><?= $product['price'] ?></td>
             <td><?= $product['purchase_date'] ?></td>

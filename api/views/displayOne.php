@@ -16,7 +16,7 @@ ob_start(); ?>
     </tr>
  
         <tr>
-            <td><img src="<?= $product['description'] ?>" alt="photo du produit"></td>
+            <td><img src="http://localhost/MDM/api/assets/<?=$product['code'].'-01.jpg'?>" alt="photo du produit"></td>
             <td><?= $product['description'] ?></td>
             <td><?= $product['price'] ?></td>
             <td><?= $product['purchase_date'] ?></td>

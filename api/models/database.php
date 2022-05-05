@@ -1,6 +1,6 @@
 <?php
 
-abstract class Database {
+class Database {
  // Connexion à la base de données
  private $host = "localhost";
  private  $db_name = "micromarket";
