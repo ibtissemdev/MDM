@@ -5,6 +5,47 @@
 ob_start(); ?>
 <!--mes éléments à afficher-->
 
+<div class="recherche_statut">
+<form action="" method="post">
+  <label for="recherche_statut">Recherche</label>
+  <select name="recherche_statut" id="recherche_statut">
+  <option value= "" disabled selected hidden>Statut</option>
+    <option value="1">En cours d’approvisionnement</option>
+    <option value="2">En stock</option>
+    <option value="3">Epuisé</option>
+    <option value="4">Retiré des rayons</option>
+  </select>
+  <button class="boutton" type="search">Envoyer</button>
+</form>
+</div>
+
+<div class="recherche_categorie">
+<form action="" method="post">
+  <label for="recherche_categorie">Catégorie</label>
+  <select name="recherche_categorie" id="recherche_categorie">
+  <option value= "" disabled selected hidden>Catégorie</option>
+    <option value="1">Boulangerie/Pâtisseri</option>
+    <option value="2">Epicerie salée</option>
+    <option value="3">Epicerie sucrée</option>
+    <option value="4">Boissons</option>
+    <option value="5">Fromagerie</option>
+    <option value="6">Poissonnerie</option>
+    <option value="7">Boucherie</option>
+    <option value="8">Libre-service</option>
+    <option value="9">Vente à l’étalage</option>
+    <option value="10">Tête de gondole</option>
+  </select>
+  <button class="boutton" type="search">Envoyer</button>
+</form>
+</div>
+
+<div>
+<form action="" method="get">
+  <label for="recherche">Recherche</label>
+<input type="search" name="search" >
+<button name="envoyer">Envoyer</button>
+</form>
+</div>
 <table>
     <tr>
         <th>Visuel principal</th>
@@ -31,9 +72,9 @@ ob_start(); ?>
         ?>
             <td><?= $product['description'] ?></td>
             <td><?= $product['price'] ?></td>
-            <td><?= $product['purchase_date'] ?></td>
-            <td><?= $product['category_id'] ?></td>
-            <td><?= $product['statut_id'] ?></td>
+            <td><?= $product['expiration_date'] ?></td>
+            <td><?= $product['nom'] ?></td>
+            <td><?= $product['nom_statut'] ?></td>
             <td><a href="<?=CHEMIN?>update/<?= $product['id_product'] ?>"><button>Modification</button></a>
                 <a href="<?=CHEMIN?>delete/<?= $product['id_product'] ?>"><button>Suppression</button></a>
                 <a href="<?=CHEMIN?>display/<?= $product['id_product'] ?>"><button>Afficher</button></a>

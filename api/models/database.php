@@ -12,9 +12,10 @@ class Database {
  {
          $this->pdo = new PDO("mysql:host=" . $this->host.";dbname=".$this->db_name, $this->username, $this->password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8',
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]);
-        echo "connexion réussie";
+       
 return $this->pdo;
  } 
     

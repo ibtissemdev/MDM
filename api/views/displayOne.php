@@ -19,9 +19,9 @@ ob_start(); ?>
             <td><img src="<?=CHEMIN.$product[0]['chemin'].$product[0]['nom_fichier']?>" alt="photo du produit"></td>
             <td><?= $product[0]['description'] ?></td>
             <td><?= $product[0]['price'] ?></td>
-            <td><?= $product[0]['purchase_date'] ?></td>
-            <td><?= $product[0]['category_id'] ?></td>
-            <td><?= $product[0]['statut_id'] ?></td>
+            <td><?= $product[0]['expiration_date'] ?></td>
+            <td><?= $product[0]['nom'] ?></td>
+            <td><?= $product[0]['nom_statut'] ?></td>
             <td><a href="<?=CHEMIN?>products/"><button>retour</button></a>
                 <a href="<?=CHEMIN?>delete/<?= $product[0]['id_product'] ?>"><button>Suppression</button></a>
             </td>

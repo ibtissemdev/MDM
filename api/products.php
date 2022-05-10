@@ -10,7 +10,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         if (isset($_GET['id'])) {
             $url = explode('/', filter_var($_GET['id']), FILTER_SANITIZE_URL);
-            if (!empty($url[1]) && $url[0]=='display' ) {
+            if (!empty($url[1]) && $url[0] == 'display') {
                 $controller->afficherUn($url[1]);
                 // $sth = $this->getPdo->prepare("SELECT * From produits WHERE id_product=$url[1]");
                 // $sth->execute();
@@ -24,56 +24,73 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $controller->supprimer($url[1]);
             } else if ($url[0] == 'update' && !empty($url[1])) {
                 $controller->miseAJour($url[1]);
-               if (!empty($url[2])) {
-        
-                require "request.php";
+                if (!empty($url[2])) {
 
-               }
-             
-        }}
+                    require "request.php";
+                }
+            }
+        }
         break;
 
     case 'POST':
-        $keys = [];
-        $champs = [];
-        $values = [];
-        foreach ($_POST as $key => $value) {
-            $keys[] = $key;
-            $champs[] = '?';
-            $values[] = $value;
+        if ($_POST['recherche_categorie']) {
+            // print_r($_POST);
+            $controller->categorie($_POST['recherche_categorie']);
+        } else if ($_POST['recherche_statut']) {
+            $controller->statut($_POST['recherche_statut']);
+        } else {
+            $keys = [];
+            $champs = [];
+            $values = [];
+            //error_log(print_r($_POST, 1)); 
+            foreach ($_POST as $key => $value) {
+                $keys[] = $key;
+                $champs[] = '?';
+                $values[] = $value;
+            }
+            array_splice($keys, 3, 1);
+            array_splice($champs, 3, 1);
+            array_splice($values, 3, 1);
+
+            $keys = implode(",", $keys);
+            $champs = implode(",", $champs);
+            $conn = $controller->getProductsManager()->getPdo();
+
+            print_r($keys);
+            print_r($champs);
+            print_r($values);
+            $sth = $conn->prepare("INSERT INTO  produits ($keys) VALUES ($champs)");
+            $sth->execute($values);
+
+            error_log(print_r($sth, 1));
+
+            //Rempli la table de liaison categorie
+            $produits_id = $conn->lastInsertId();      //Récupère l'id de la dernière entrée
+            print_r($produits_id);
+
+            $category_id = $_POST['category_id'];
+
+            $sth = $conn->prepare("INSERT INTO  liaison_categorie (category_id,produits_id) VALUES (?,?)");
+
+            $sth->execute([$category_id, $produits_id]);
+
+            $sth = $conn->prepare("SELECT code From produits WHERE id_product=$produits_id");
+            $sth->execute();
+            $result = $sth->fetch(); //récupère le category_id de la dernière entrée
+
+            $code = $result['code'];
+
+
+            //REmpli la table de liason assets
+            $sth = $conn->prepare("SELECT id_assets From assets WHERE nom_fichier LIKE '%$code%'");
+            $sth->execute();
+            $result = $sth->fetch(); //récupère le category_id de la dernière entrée
+
+            $id_assets = $result['id_assets'];
+            $sth = $conn->prepare("INSERT INTO  liaison_assets (produits_id,assets_id,drapeau) VALUES ($produits_id,$id_assets,1)");
+            $sth->execute();
         }
-        $keys = implode(",", $keys);
-        $champs = implode(",", $champs);
-        $conn=$controller->getProductsManager()->getPdo();
-        $sth = $conn->prepare("INSERT INTO  produits ($keys) VALUES ($champs)");
-        $sth->execute($values);
-        //Rempli la table de liaison categorie
-        $produits_id = $conn->lastInsertId();      //Récupère l'id de la dernière entrée
 
-        $sth = $conn->prepare("SELECT category_id,code From produits WHERE id_product=$produits_id");
-        $sth->execute();
-        $result = $sth->fetch(); //récupère le category_id de la dernière entrée
-   
-
-        //echo "<pre>", print_r($result), "</pre>";
-        $category_id = $result['category_id'];
-
-        // echo $category_id;
-
-        $code = $result['code'];
-
-        $sth = $conn->prepare("INSERT INTO  liaison_categorie (category_id, produits_id) VALUES ($category_id,$produits_id)");
-        $sth->execute();
-        // error_log(print_r($sth, 1));
-
-        //REmpli la table de liason assets
-        $sth = $conn->prepare("SELECT id_assets From assets WHERE nom_fichier LIKE '%$code%'");
-        $sth->execute();
-        $result = $sth->fetch(); //récupère le category_id de la dernière entrée
-
-        $id_assets = $result['id_assets'];
-        $sth = $conn->prepare("INSERT INTO  liaison_assets (produits_id,assets_id,drapeau) VALUES ($produits_id,$id_assets,1)");
-        $sth->execute();
 
         break;
 

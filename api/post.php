@@ -6,14 +6,14 @@ parse_str(file_get_contents('php://input'), $POST);
 $url = "http://localhost/MDM/api/products.php"; // ajouter le produit 1
 
 $data = array(
-    'code' => 'TVF',
-    'description' => 'Thé vert saveur framboise',
-    'price' => '149',
-    'category_id' => '4',
-    'statut_id' => '2',
-    'supplier_id' => '7',
-    'purchase_date' => '2021-04_01 10:40:00',
-    'expiration_date' => '2023-04-01 10:40:00'
+    'code' => 'BAG',
+    'description' => 'La baguette',
+    'price' => '357',
+    'category_id' => '1',
+    'statut_id' => '3',
+    'supplier_id' => '9',
+    'purchase_date' => '2022-04_09 10:40:00',
+    'expiration_date' => '2022-04-13 10:40:00'
 );
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);//true pour retourner le transfert en tant que chaîne de caractères de la valeur retournée par curl_exec() au lieu de l'afficher directement.

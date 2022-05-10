@@ -3,6 +3,7 @@ require_once "./models/database.php";
 $connection = new Database;
 $pdo = $connection->getPdo();
 
+//scanner les fichiers d'un répertoire
 $directory=scandir("assets/");
 
 //var_dump($directory);

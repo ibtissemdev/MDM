@@ -19,8 +19,8 @@ ob_start(); ?>
             <td><img src="<?=CHEMIN.$product[0]['chemin'].$product[0]['nom_fichier']?>" alt="photo du produit"></td>
             <td><?= $product[0]['description'] ?></td>
             <td><?= $product[0]['price'] ?></td>
-            <td><?= $product[0]['purchase_date'] ?></td>
-            <td><?= $product[0]['category_id'] ?></td>
+            <td><?= $product[0]['expiration_date'] ?></td>
+            <td><?= $product[0]['nom'] ?></td>
             <td><form action="">
 <select name="statut_id" id="" onchange="request(this.value,<?= $product[0]['id_product'] ?>)">
 <option value="1" <?=($product[0]['statut_id']==1)? "selected": ""?>>En stock</option>

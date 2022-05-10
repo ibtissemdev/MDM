@@ -40,4 +40,20 @@ public function miseAJourRequete ($id_product,$id_statut) { //On modifie le stat
 public function getProductsManager() { return $this->productsManager;}
 public function setProductsManager($productsManager) { $this->productsManager = $productsManager; return $this;
 }
+
+public function categorie($categorie) {
+    $products=$this->productsManager->rechercheCategorie($categorie);
+    //echo "<pre>",print_r($products),"</pre>"; 
+        require "./views/displayAll.php";
+
+}
+
+public function statut($statut) {
+    $products=$this->productsManager->rechercheStatut($statut);
+    //echo "<pre>",print_r($products),"</pre>"; 
+        require "./views/displayAll.php";
+
+}
+
+
 }
