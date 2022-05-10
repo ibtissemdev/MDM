@@ -55,5 +55,13 @@ public function statut($statut) {
 
 }
 
+public function description($description) {
+    $products=$this->productsManager->rechercheDescription($description);
+    //echo "<pre>",print_r($products),"</pre>"; 
+        require "./views/displayAll.php";
+
+}
+
+
 
 }

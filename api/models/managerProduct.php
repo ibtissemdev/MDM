@@ -25,7 +25,7 @@ class ManagerProduct extends Database
             //  echo "<pre>",print_r($p),"</pre>";     
         }
     }
-   
+
     //Methode DELETE
     public function delete($id)
     {
@@ -38,7 +38,6 @@ class ManagerProduct extends Database
     public function displayOne($id)
     {
         $product = $this->viewAssets($id);
-  
     }
 
 
@@ -64,20 +63,20 @@ class ManagerProduct extends Database
         return 'update requête traitée';
     }
 
-private function visuel($resultat) {
-    for ($i = 0; $i < count($resultat); $i++) {
+    private function visuel($resultat)
+    {
+        for ($i = 0; $i < count($resultat); $i++) {
 
-        $code = $resultat[$i]['code'];
-        $sth = $this->getPdo()->prepare("SELECT nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
-        $sth->execute();
-        $result = $sth->fetch(); //récupère le category_id de la dernière entrée
-        $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
-        $resultat[$i]['chemin'] = $result['chemin'];
-     
+            $code = $resultat[$i]['code'];
+            $sth = $this->getPdo()->prepare("SELECT nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
+            $sth->execute();
+            $result = $sth->fetch(); //récupère le category_id de la dernière entrée
+            $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
+            $resultat[$i]['chemin'] = $result['chemin'];
+        }
+        error_log(print_r($resultat, 1));
+        return $resultat;
     }
-    error_log(print_r($resultat,1));
-    return $resultat;
-}
 
     public function viewAssets($id = null)
     {
@@ -85,13 +84,12 @@ private function visuel($resultat) {
             $sth = $this->getPdo()->prepare("SELECT id_product,statut_id, code,description,price,expiration_date,nom, nom_statut FROM produits INNER JOIN liaison_categorie on produits.id_product=liaison_categorie.produits_id INNER JOIN category ON liaison_categorie.category_id=category.id_category INNER JOIN statut ON produits.statut_id=statut.id_statut");
             $sth->execute();
             $resultat = $sth->fetchall();
-       
         } else {
             $sth = $this->getPdo()->prepare("SELECT id_product,statut_id, code,description,price,expiration_date,nom, nom_statut FROM produits INNER JOIN liaison_categorie on produits.id_product=liaison_categorie.produits_id INNER JOIN category ON liaison_categorie.category_id=category.id_category INNER JOIN statut ON produits.statut_id=statut.id_statut WHERE id_product=$id");
             $sth->execute();
             $resultat = $sth->fetchall();
             //echo '<pre>', print_r($resultat), '</pre>';
-        
+
         }
         for ($i = 0; $i < count($resultat); $i++) {
 
@@ -102,30 +100,31 @@ private function visuel($resultat) {
             $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
             $resultat[$i]['chemin'] = $result['chemin'];
         }
-       // echo '<pre>', print_r($resultat), '</pre>';
+        // echo '<pre>', print_r($resultat), '</pre>';
         return $resultat;
-
     }
 
-    public function rechercheStatut ($statut) {
+    public function rechercheStatut($statut)
+    {
         $sth = $this->getPdo()->prepare("SELECT id_product,statut_id, code,description,price,expiration_date,nom, nom_statut FROM produits INNER JOIN liaison_categorie on produits.id_product=liaison_categorie.produits_id INNER JOIN category ON liaison_categorie.category_id=category.id_category INNER JOIN statut ON produits.statut_id=statut.id_statut WHERE id_statut=$statut");
         $sth->execute();
         $resultat = $sth->fetchall();
-        error_log(print_r($resultat,1));
-       // echo '<pre>', print_r($resultat), '</pre>';
-       for ($i = 0; $i < count($resultat); $i++) {
+        error_log(print_r($resultat, 1));
+        // echo '<pre>', print_r($resultat), '</pre>';
+        for ($i = 0; $i < count($resultat); $i++) {
 
-        $code = $resultat[$i]['code'];
-        $sth = $this->getPdo()->prepare("SELECT nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
-        $sth->execute();
-        $result = $sth->fetch(); //récupère le category_id de la dernière entrée
-        $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
-        $resultat[$i]['chemin'] = $result['chemin'];
-    }
+            $code = $resultat[$i]['code'];
+            $sth = $this->getPdo()->prepare("SELECT nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
+            $sth->execute();
+            $result = $sth->fetch(); //récupère le category_id de la dernière entrée
+            $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
+            $resultat[$i]['chemin'] = $result['chemin'];
+        }
         return $resultat;
     }
 
-    public function rechercheCategorie ($categorie) {
+    public function rechercheCategorie($categorie)
+    {
         $sth = $this->getPdo()->prepare("SELECT id_product,statut_id, code,description,price,expiration_date,nom, nom_statut FROM produits INNER JOIN liaison_categorie on produits.id_product=liaison_categorie.produits_id INNER JOIN category ON liaison_categorie.category_id=category.id_category INNER JOIN statut ON produits.statut_id=statut.id_statut WHERE id_category=$categorie");
         $sth->execute();
         $resultat = $sth->fetchall();
@@ -140,10 +139,30 @@ private function visuel($resultat) {
             $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
             $resultat[$i]['chemin'] = $result['chemin'];
         }
-          // echo '<pre>', print_r($resultat), '</pre>';
-          return $resultat;
-        }
+        // echo '<pre>', print_r($resultat), '</pre>';
+        return $resultat;
+    }
+
+    public function rechercheDescription($description)
+    {
+
+        $sth = $this->getPdo()->prepare("SELECT id_product,statut_id, code,description,price,expiration_date,nom, nom_statut FROM produits INNER JOIN liaison_categorie on produits.id_product=liaison_categorie.produits_id INNER JOIN category ON liaison_categorie.category_id=category.id_category INNER JOIN statut ON produits.statut_id=statut.id_statut  WHERE MATCH(description) AGAINST ('$description')");
+        $sth->execute();
+        $resultat = $sth->fetchall();
+        echo '<pre>', print_r($resultat), '</pre>';
+        //$this->visuel($resultat);
     
 
+        for ($i = 0; $i < count($resultat); $i++) {
 
-   }
+            $code = $resultat[$i]['code'];
+            $sth = $this->getPdo()->prepare("SELECT nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
+            $sth->execute();
+            $result = $sth->fetch(); //récupère le category_id de la dernière entrée
+            $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
+            $resultat[$i]['chemin'] = $result['chemin'];
+        }
+        // echo '<pre>', print_r($resultat), '</pre>';
+        return $resultat;
+    }
+}

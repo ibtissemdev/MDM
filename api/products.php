@@ -33,11 +33,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'POST':
-        if ($_POST['recherche_categorie']) {
+        //var_dump($_POST["description"]);
+
+        if (@$_POST['recherche_categorie'] && !isset($_POST['recherche_statut']) && !isset($_POST['description'])) {
             // print_r($_POST);
             $controller->categorie($_POST['recherche_categorie']);
-        } else if ($_POST['recherche_statut']) {
+        } else if ($_POST['recherche_statut']&& !isset($_POST['description']) && !isset($_POST['recherche_categorie']) ) {
             $controller->statut($_POST['recherche_statut']);
+          
+
+        } else if ($_POST["description"] && !isset($_POST['recherche_statut']) && !isset($_POST['recherche_categorie'])) {
+            $controller->description($_POST["description"]);
+            //print_r($_POST["description"]);
+       
         } else {
             $keys = [];
             $champs = [];

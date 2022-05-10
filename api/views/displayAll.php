@@ -40,10 +40,11 @@ ob_start(); ?>
 </div>
 
 <div>
-<form action="" method="get">
-  <label for="recherche">Recherche</label>
-<input type="search" name="search" >
-<button name="envoyer">Envoyer</button>
+<form action="recherche.php" method="post">
+  <label for="description">Recherche</label>
+<input type="search" name="description" id="description">
+<button type='search' >Envoyer</button>
+
 </form>
 </div>
 <table>
@@ -82,6 +83,29 @@ ob_start(); ?>
         </tr>
     <?php endforeach ?>
 </table>
+
+<!--  canvas  -->
+<canvas id="dessin" width="640" height="480">
+       Texte pour les navigateurs qui ne supportent pas canvas
+</canvas>
+<script>
+    var monCanvas = document.getElementById('dessin');
+    if (monCanvas.getContext){
+        var ctx = monCanvas.getContext('2d');
+        ctx.fillStyle    = '#00F';
+        ctx.font         = 'Italic 30px Sans-Serif';
+        ctx.textBaseline = 'top';
+        /* texte plein */
+        ctx.fillText  ('Hello!', 40, 50);
+        ctx.font         = 'Bold 30px Sans-Serif';
+        /* contour de texte */
+        ctx.strokeText('Hello!', 40, 150);
+    } else {
+        alert('canvas non supporté par ce navigateur');
+    }
+</script>
+
+
 <?php
 $content = ob_get_clean();
 $title="afficher tous les produits";
