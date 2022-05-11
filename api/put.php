@@ -1,8 +1,8 @@
 <?php
 
-$url = "http://localhost/MDM/api/products/7"; // modifier le produit 7
+$url = "http://localhost/MDM/api/products/37"; // modifier le produit 7
 $data = array(
- 'code' => 'TVF',
+ 'code' => 'TVF2',
  'description' => 'The vert saveur framboise en sachets',
  'price' => '149',
  'category_id' => '4',

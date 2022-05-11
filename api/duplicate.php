@@ -1,14 +1,14 @@
 <?php
-$url = "http://localhost/MDM/api/products/37"; // dupliquer le produit 7
+$url = "http://localhost/MDM/api/products/44"; // dupliquer le produit 7
 $data = array(
- 'code' => 'TVF2',
- 'description' => 'Thé vert saveur framboise en sachets',
- 'price' => '149',
- 'category_id' => '4',
- 'statut_id' => '2',
- 'supplier_id' => '1',
- 'purchase_date' => '2021-04_01 10:40:00',
- 'expiration_date' => '2023-04-01 10:40:00'
+    'code' => 'BAG2',
+    'description' => 'La baguette',
+    'price' => '357',
+    'category_id' => '1',
+    'statut_id' => '3',
+    'supplier_id' => '9',
+    'purchase_date' => '2022-04_09 10:40:00',
+    'expiration_date' => '2022-04-13 10:40:00'
 );
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

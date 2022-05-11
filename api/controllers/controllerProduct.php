@@ -42,26 +42,40 @@ public function setProductsManager($productsManager) { $this->productsManager = 
 }
 
 public function categorie($categorie) {
-    $products=$this->productsManager->rechercheCategorie($categorie);
+    $products=$this->productsManager->searchCategorie($categorie);
     //echo "<pre>",print_r($products),"</pre>"; 
         require "./views/displayAll.php";
 
 }
 
 public function statut($statut) {
-    $products=$this->productsManager->rechercheStatut($statut);
+    $products=$this->productsManager->searchStatut($statut);
     //echo "<pre>",print_r($products),"</pre>"; 
         require "./views/displayAll.php";
 
 }
 
 public function description($description) {
-    $products=$this->productsManager->rechercheDescription($description);
+    $products=$this->productsManager->searchDescription($description);
     //echo "<pre>",print_r($products),"</pre>"; 
         require "./views/displayAll.php";
 
 }
 
+public function miseAJourPut($data,$cible) {
+    $products=$this->productsManager->updateProductPut($data,$cible);
+    require "./views/displayAll.php";
+}
 
+public function dupliquer($data) {
+    $products=$this->productsManager->updateProductDuplicate($data);
+    require "./views/displayAll.php";
+
+}
+
+public function ajoutPost($data) {
+    $products=$this->productsManager->insertProduct($data);
+    require "./views/displayAll.php";
+}
 
 }
