@@ -4,9 +4,10 @@ define("CHEMIN", str_replace("products.php", "", (isset($_SERVER['HTTPS']) ? "ht
 
 require_once "controllers/controllerProduct.php";
 $controller = new ControllerProduct;
-var_dump($_SERVER['REQUEST_METHOD']);
+//var_dump($_SERVER['REQUEST_METHOD']);
 
 switch ($_SERVER['REQUEST_METHOD']) {
+    
     case 'GET':
         if (isset($_GET['id'])) {
             $url = explode('/', filter_var($_GET['id']), FILTER_SANITIZE_URL);
@@ -29,18 +30,18 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'POST':
-        error_log("traitement de la méthode POST : " . print_r($_POST, 1));
+        //error_log("traitement de la méthode POST : " . print_r($_POST, 1));
 
         if (@$_POST['recherche_categorie'] && !isset($_POST['recherche_statut']) && !isset($_POST['description'])) {
-            error_log("categorie : " . print_r($_POST, 1));
+          error_log("POST categorie : " . print_r($_POST, 1));
             $controller->categorie($_POST['recherche_categorie']);
         }
         if (@$_POST['recherche_statut'] && !isset($_POST['description']) && !isset($_POST['recherche_categorie'])) {
-            error_log("statut : " . print_r($_POST, 1));
+          error_log("POST statut : " . print_r($_POST, 1));
             $controller->statut($_POST['recherche_statut']);
         }
         if (@$_POST["description"] && !isset($_POST['recherche_statut']) && !isset($_POST['recherche_categorie'])) {
-            error_log("description : " . print_r($_POST, 1));
+            error_log("POST description : " . print_r($_POST, 1));
             $controller->description($_POST["description"]);
             //print_r($_POST["description"]);
 
@@ -48,15 +49,22 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
         if (!isset($_POST['recherche_categorie']) && !isset($_POST['recherche_statut']) && empty($_POST['description'])) {
             // header("Location: ".CHEMIN."products/"); 
-            error_log("aucune recherche : " . print_r($_POST, 1));
+          //  error_log("aucune recherche : " . print_r($_POST, 1));
         }
         if (isset($_POST) ) {
+
             $POST = array(); //tableau qui va contenir les données reçues
             parse_str(file_get_contents('php://input'), $POST);
+//$compteur=0;
 
-           error_log("envoie post via le fichier post.php: " . print_r($POST, 1));
-           $controller->ajoutPost($POST);
-          
+//foreach ($POST as $data) {
+   // error_log("POST envoie post via le fichier post.php: " . print_r($data, 1));
+    $controller->ajoutPost($POST);
+//}
+        
+        //  error_log('compteur'.$compteur);
+
+
         }
         break;
 

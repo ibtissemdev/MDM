@@ -261,33 +261,91 @@ class ManagerProduct extends Database
 
     public function insertProduct($data) {
 
-         //error_log(print_r($_POST,1));
+       error_log('CONTENU DATA : *****************************************'.print_r($data['supplier_id'],1));
+$nomFournisseur=$data['supplier_id'];
+
+print_r('excel :'.$nomFournisseur. "<br>");
+
+
+$sth =$this->getPdo()->prepare("SELECT nom FROM suppliers WHERE nom='$nomFournisseur' ");
+$sth->execute();
+$result = $sth->fetch();
+$result=implode($result);
+
+
+print_r ('bdd :'.$result. "<br>");
+
+
+ if ($nomFournisseur==$result) {
+      echo "il existe déjà<br><br>" ;}
+       else {
+
+        $sth =$this->getPdo()->prepare("INSERT INTO  suppliers (nom) VALUES (:nomFournisseur)");
+        $sth->bindParam(':nomFournisseur',$nomFournisseur,PDO::PARAM_STR);
+        $sth->execute();
+
+      }
+
+
+
+       $sth =$this->getPdo()->prepare("SELECT MAX(id_suppliers) FROM suppliers");
+        $sth->execute();
+       $result = $sth->fetch(); //récupère l'id_suppliers de la dernière entrée
+
+       $id_suppliers= implode($result);
+       print_r($id_suppliers);
+
+
+
+       //  $sth->execute($values);
+//echo "<prep>",print_r($data), "</pre>";die;
+
+
+
+   error_log('CONTENU DATA : *****************************************'.print_r($data));
+
+
+        //  //error_log(print_r($_POST,1));
          $keys = [];
          $champs = [];
          $values = [];
          //  error_log(print_r($data, 1)); 
+
+         $data['supplier_id']=$id_suppliers;
+
+
          foreach ($data as $key => $value) {
              $keys[] = $key;
              $champs[] = '?';
              $values[] = $value;
          }
+
          array_splice($keys, 3, 1);
          array_splice($champs, 3, 1);
          array_splice($values, 3, 1);
+        
+   
+         // l'index est remplacé en réatribuant un numéro d'index après l'élément supprimé
+         array_splice($keys, 7, 1);
+         array_splice($champs, 7, 1);
+         array_splice($values, 7, 1);
          
          $keys = implode(",", $keys);
          $champs = implode(",", $champs);
        
          error_log(print_r($keys,1));
-         // print_r($keys);
-         // print_r($champs);
-         // print_r($values);
+         print_r($keys);
+         print_r($champs);
+         print_r($values);
+
+         
          $sth =$this->getPdo()->prepare("INSERT INTO  produits ($keys) VALUES ($champs)");
+
          $sth->execute($values);
 
-         //$sth=$this->getPdo()->lastInsertId();
+         $sth=$this->getPdo()->lastInsertId();
 
-         //error_log(print_r($sth,1));die;
+         error_log(print_r($sth,1));
 
          $sth =$this->getPdo()->prepare("SELECT MAX(id_product) FROM produits");
          $sth->execute();
@@ -300,7 +358,7 @@ class ManagerProduct extends Database
      
          // error_log("le dernier id : ".print_r($produits_id, 1));die;
 
-         $category_id = $_POST['category_id'];
+         $category_id = $data['category_id'];
 
          $sth =$this->getPdo()->prepare("INSERT INTO  liaison_categorie (category_id,produits_id) VALUES (?,?)");
 

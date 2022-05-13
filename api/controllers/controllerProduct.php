@@ -74,7 +74,11 @@ public function dupliquer($data) {
 }
 
 public function ajoutPost($data) {
-    $products=$this->productsManager->insertProduct($data);
+foreach ($data as $enregistrements) {
+    error_log("Controleur ajoutPost ".print_r($enregistrements,1));
+    $products=$this->productsManager->insertProduct($enregistrements);
+
+}
     require "./views/displayAll.php";
 }
 

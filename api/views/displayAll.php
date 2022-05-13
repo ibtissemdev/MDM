@@ -68,7 +68,8 @@ ob_start(); ?>
    ?>
         <tr>
         <td><img src="<?=CHEMIN.$product['chemin'].$product['nom_fichier']?>" alt="<?= $product['description'] ?>"> </td>
-        <?php error_log(print_r($product,1));
+        <?php error_log('DisplayALl');
+        error_log(print_r($product,1));
       
         ?>
             <td><?= $product['description'] ?></td>
