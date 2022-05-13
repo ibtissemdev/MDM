@@ -64,10 +64,10 @@ ob_start(); ?>
     foreach($products as $product) : ?>
    <?php      
 
-           // echo "<pre>",print_r($produits),"</pre>"; 
+         //  echo "<pre>",print_r($product),"</pre>"; 
    ?>
         <tr>
-        <td><img src="<?=CHEMIN.$product['chemin'].$product['nom_fichier']?>" alt="<?= $product['description'] ?>"> </td>
+        <td><img src="<?=  CHEMIN.$product['chemin'].$product['nom_fichier']?>" alt="<?= $product['description'] ?>"> </td>
         <?php error_log('DisplayALl');
         error_log(print_r($product,1));
       

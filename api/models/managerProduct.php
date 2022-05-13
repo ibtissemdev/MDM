@@ -6,10 +6,13 @@ require_once 'Product.php';
 class ManagerProduct extends Database
 {
     private $products;
-    private const JOIN= 'SELECT * FROM produits 
-        INNER JOIN liaison_categorie on produits.id_product=liaison_categorie.produits_id 
+    private const JOIN= 'SELECT *,nom_fichier,chemin,id_assets FROM produits 
+        INNER JOIN liaison_categorie ON produits.id_product=liaison_categorie.produits_id 
         INNER JOIN category ON liaison_categorie.category_id=category.id_category 
-        INNER JOIN statut ON produits.statut_id=statut.id_statut ';
+        INNER JOIN statut ON produits.statut_id=statut.id_statut 
+        INNER JOIN liaison_assets ON produits.id_product=liaison_assets.produits_id
+        INNER JOIN assets ON liaison_assets.assets_id=assets.id_assets
+        ';
 
 
     public function ajoutProduct($product)
@@ -23,7 +26,7 @@ class ManagerProduct extends Database
     }
     public function chargementProducts()
     {
-        $mesProducts = $this->viewAssets();
+        $mesProducts = $this->view();
         //var_dump($mesProducts);
         foreach ($mesProducts as $product) {
             $p = new Product($product);
@@ -37,34 +40,34 @@ class ManagerProduct extends Database
     {
         $sth =  $this->getPdo()->prepare("DELETE FROM produits  WHERE id_product=$id");
         $sth->execute();
-        $products = $this->viewAssets();
+        $products = $this->view();
         $sth =  $this->getPdo()->prepare("DELETE FROM liaison_categorie  WHERE produits_id=$id");
         $sth->execute();
-        $products = $this->viewAssets();
+        $products = $this->view();
         $sth =  $this->getPdo()->prepare("DELETE FROM liaison_assets  WHERE produits_id=$id");
         $sth->execute();
-        $products = $this->viewAssets();
+        $products = $this->view();
 
         require './views/displayAll.php';
         return 'Produit supprimé';
     }
-    public function displayOne($id)
-    {
-        $product = $this->viewAssets($id);
-    }
+    // public function displayOne($id)
+    // {
+    //     $product = $this->viewAssets($id);
+    // }
 
 
-    public function displayAll()
-    {
-        $products = $this->viewAssets();
-        $products[] = $this->viewAssets($products['code']);
-        require './views/displayAll.php';
-        //  print_r ($products);
-    }
+    // public function displayAll()
+    // {
+    //     $products = $this->viewAssets();
+    //     $products[] = $this->viewAssets($products['code']);
+    //     require './views/displayAll.php';
+    //     //  print_r ($products);
+    // }
 
     public function update($id)
     { //afficher le produit à modifier
-        $product = $this->viewAssets($id);
+        $product = $this->view($id);
         require './views/modification.php';
     }
 
@@ -76,25 +79,30 @@ class ManagerProduct extends Database
         return 'update requête traitée';
     }
 
-    private function visuel($resultat)
-    {
-        for ($i = 0; $i < count($resultat); $i++) {
+    // private function visuel($resultat)
 
-            $code = $resultat[$i]['code'];
-            $sth = $this->getPdo()->prepare("SELECT nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
-            $sth->execute();
-            $result = $sth->fetch(); 
-            error_log(print_r($result,1));
-            $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
-            $resultat[$i]['chemin'] = $result['chemin'];
-        }
-        //error_log(print_r($resultat, 1));
-        return $resultat;
-    }
+    // {
+
+    //     for ($i = 0; $i < count($resultat); $i++) {
+
+    //         $code = $resultat[$i]['code'];
+    //         $sth = $this->getPdo()->prepare("SELECT id_assets, nom_fichier, chemin From assets WHERE nom_fichier LIKE '%$code%'");
+    //         $sth->execute();
+    //         $result = $sth->fetch(); 
+    //         error_log(print_r($result,1));
 
 
+    //         $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
+    //         $resultat[$i]['chemin'] = $result['chemin'];
+            
+    //     }
+    //     //error_log(print_r($resultat, 1));
+    //     return $resultat;
+    // }
 
-    public function viewAssets($id = null)
+
+
+    public function view($id = null)
     {
         if ($id == null) {
             $sth = $this->getPdo()->prepare(
@@ -112,7 +120,7 @@ class ManagerProduct extends Database
             //echo '<pre>', print_r($resultat), '</pre>';
 
         }
-        $resultat = $this->visuel($sth->fetchAll());
+        $resultat =$sth->fetchAll();
         // for ($i = 0; $i < count($resultat); $i++) {
 
         //     $code = $resultat[$i]['code'];
@@ -122,7 +130,7 @@ class ManagerProduct extends Database
         //     $resultat[$i]['nom_fichier'] = $result['nom_fichier'];
         //     $resultat[$i]['chemin'] = $result['chemin'];
         // }
-        // echo '<pre>', print_r($resultat), '</pre>';
+       // error_log(print_r($resultat,1));
         return $resultat;
     }
 
@@ -134,7 +142,7 @@ class ManagerProduct extends Database
             SELF::JOIN.
          "WHERE id_statut=$statut");
         $sth->execute();
-        $resultat = $this->visuel($sth->fetchAll());
+        $resultat = $sth->fetchAll();
         return $resultat;
     }
 
@@ -145,7 +153,7 @@ class ManagerProduct extends Database
             "WHERE id_category=$categorie"
         );
         $sth->execute();
-        $resultat = $this->visuel($sth->fetchAll());
+        $resultat =$sth->fetchAll();
 
         return $resultat;
     }
@@ -158,7 +166,7 @@ class ManagerProduct extends Database
         );
         $sth->execute();
         // $resultat = $sth->fetchall();
-        $resultat = $this->visuel($sth->fetchAll());
+        $resultat = $sth->fetchAll();
         //  echo '<pre>', print_r($resultat), '</pre>';
 
         return $resultat;
@@ -226,7 +234,7 @@ class ManagerProduct extends Database
         $keys = implode(",", $keys);
         $champs = implode(",", $champs);
         $sth = $this->getPdo()->prepare("INSERT INTO produits ($keys) VALUES ($champs) ON DUPLICATE KEY UPDATE id_product =id_product+1");
-        var_dump($sth);
+        //var_dump($sth);
         $sth->execute($values); //Duplique une entrée
         $sth =$this->getPdo()->prepare("SELECT MAX(id_product) FROM produits");
         $sth->execute();
@@ -261,10 +269,11 @@ class ManagerProduct extends Database
 
     public function insertProduct($data) {
 
-       error_log('CONTENU DATA : *****************************************'.print_r($data['supplier_id'],1));
+        echo 'je suis ici';
+      // error_log('CONTENU DATA : *****************************************'.print_r($data['supplier_id'],1));
 $nomFournisseur=$data['supplier_id'];
 
-print_r('excel :'.$nomFournisseur. "<br>");
+//print_r('excel :'.$nomFournisseur. "<br>");
 
 
 $sth =$this->getPdo()->prepare("SELECT nom FROM suppliers WHERE nom='$nomFournisseur' ");
@@ -273,7 +282,7 @@ $result = $sth->fetch();
 $result=implode($result);
 
 
-print_r ('bdd :'.$result. "<br>");
+//print_r ('bdd :'.$result. "<br>");
 
 
  if ($nomFournisseur==$result) {
@@ -293,7 +302,7 @@ print_r ('bdd :'.$result. "<br>");
        $result = $sth->fetch(); //récupère l'id_suppliers de la dernière entrée
 
        $id_suppliers= implode($result);
-       print_r($id_suppliers);
+       //print_r($id_suppliers);
 
 
 
@@ -333,12 +342,12 @@ print_r ('bdd :'.$result. "<br>");
          $keys = implode(",", $keys);
          $champs = implode(",", $champs);
        
-         error_log(print_r($keys,1));
-         print_r($keys);
-         print_r($champs);
-         print_r($values);
+        //  error_log(print_r($keys,1));
+        //  print_r($keys);
+        //  print_r($champs);
+        //  print_r($values);
 
-         
+
          $sth =$this->getPdo()->prepare("INSERT INTO  produits ($keys) VALUES ($champs)");
 
          $sth->execute($values);
@@ -374,7 +383,13 @@ print_r ('bdd :'.$result. "<br>");
          $sth->execute();
          $result = $sth->fetch(); //récupère le category_id de la dernière entrée
 
-         $id_assets = $result['id_assets'];
+         if($data['nom_fichier']==null) {
+            $id_assets =29;  
+         } else {
+
+            $id_assets = $result['id_assets'];
+         }
+
          $sth =$this->getPdo()->prepare("INSERT INTO  liaison_assets (produits_id,assets_id,drapeau) VALUES ($produits_id,$id_assets,1)");
          $sth->execute();
     }

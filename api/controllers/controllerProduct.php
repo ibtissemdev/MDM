@@ -18,13 +18,13 @@ echo $this->productsManager->delete($id);
 }
 
 public function afficherTout() {
-$products=$this->productsManager->viewAssets();
+$products=$this->productsManager->view();
 //echo "<pre>",print_r($products),"</pre>"; 
     require "./views/displayAll.php";
 }
  public function afficherUn($id) {
-    $product=$this->productsManager->viewAssets($id);
-    echo "<pre>",print_r($product),"</pre>"; 
+    $product=$this->productsManager->view($id);
+    //echo "<pre>",print_r($product),"</pre>"; 
     require './views/displayOne.php';
     
  }
