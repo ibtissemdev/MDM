@@ -3,15 +3,16 @@ require_once "database.php";
 
 
 class Product extends Database {
-private $id_product;
-private $code;
-private $description;
-private $price;
-private $category_id;
-private $statut_id;
-private $purchase_date;
-private $expiration_date;
-private $photo;
+protected $id_product;
+protected $code;
+protected $description;
+protected $price;
+protected $category_id;
+protected $statut_id;
+protected $purchase_date;
+protected $expiration_date;
+protected $nom_fournisseur;
+protected $photo;
 
 
 // public function __construct($data)
@@ -55,4 +56,24 @@ public function getPhoto() { return $this->photo;}
 public function setPhoto($photo) {
     $this->photo = 'assets/'.$this->code.'-01.jpg'; 
     return $this->photo=$photo;}
+
+/**
+ * Get the value of nom_fournisseur
+ */ 
+public function getNom_fournisseur()
+{
+return $this->nom_fournisseur;
+}
+
+/**
+ * Set the value of nom_fournisseur
+ *
+ * @return  self
+ */ 
+public function setNom_fournisseur($nom_fournisseur)
+{
+$this->nom_fournisseur = $nom_fournisseur;
+
+return $this;
+}
 }

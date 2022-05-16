@@ -6,12 +6,13 @@ require_once 'Product.php';
 class ManagerProduct extends Database
 {
     private $products;
-    private const JOIN= 'SELECT *,nom_fichier,chemin,id_assets FROM produits 
+    private const JOIN= 'SELECT *,nom_fichier,chemin,id_assets, nom_fournisseur FROM produits 
         INNER JOIN liaison_categorie ON produits.id_product=liaison_categorie.produits_id 
         INNER JOIN category ON liaison_categorie.category_id=category.id_category 
         INNER JOIN statut ON produits.statut_id=statut.id_statut 
         INNER JOIN liaison_assets ON produits.id_product=liaison_assets.produits_id
         INNER JOIN assets ON liaison_assets.assets_id=assets.id_assets
+        INNER JOIN suppliers ON produits.supplier_id=suppliers.id_suppliers
         ';
 
 
@@ -27,12 +28,27 @@ class ManagerProduct extends Database
     public function chargementProducts()
     {
         $mesProducts = $this->view();
-        //var_dump($mesProducts);
+       // var_dump($mesProducts);
         foreach ($mesProducts as $product) {
             $p = new Product($product);
             $this->ajoutProduct($p);
             //  echo "<pre>",print_r($p),"</pre>";     
         }
+        
+    }
+
+    public function chargementProductsExport() {
+    
+
+        $mesProducts = $this->view();
+       // echo "<pre>",print_r($mesProducts),"</pre>";   
+        return $mesProducts;
+        // foreach ($mesProducts as $product) {
+        //     $p = new Product($product);
+        //     $this->ajoutProduct($p);
+        //      // echo "<pre>",print_r($p),"</pre>";     
+        // }
+
     }
 
     //Methode DELETE
@@ -295,8 +311,6 @@ $result=implode($result);
 
       }
 
-
-
        $sth =$this->getPdo()->prepare("SELECT MAX(id_suppliers) FROM suppliers");
         $sth->execute();
        $result = $sth->fetch(); //récupère l'id_suppliers de la dernière entrée
@@ -304,9 +318,6 @@ $result=implode($result);
        $id_suppliers= implode($result);
        //print_r($id_suppliers);
 
-
-
-       //  $sth->execute($values);
 //echo "<prep>",print_r($data), "</pre>";die;
 
 
@@ -392,5 +403,25 @@ $result=implode($result);
 
          $sth =$this->getPdo()->prepare("INSERT INTO  liaison_assets (produits_id,assets_id,drapeau) VALUES ($produits_id,$id_assets,1)");
          $sth->execute();
+    }
+
+    /**
+     * Get the value of products
+     */ 
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * Set the value of products
+     *
+     * @return  self
+     */ 
+    public function setProducts($products)
+    {
+        $this->products = $products;
+
+        return $this;
     }
 }
