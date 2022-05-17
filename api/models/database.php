@@ -1,5 +1,6 @@
 <?php
 
+
 class Database {
  // Connexion à la base de données
  private $host = "localhost";

@@ -3,6 +3,8 @@ require_once 'database.php';
 require_once 'Product.php';
 
 
+
+
 class ManagerProduct extends Database
 {
     private $products;

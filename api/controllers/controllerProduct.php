@@ -1,7 +1,7 @@
 <?php
 // require_once "../models/Product.php";
-require_once "./models/managerProduct.php";
-
+//require_once "../api/models/managerProduct.php";
+require_once "../models/managerProduct.php";
 
 class ControllerProduct {
 private $productsManager;
@@ -20,12 +20,12 @@ echo $this->productsManager->delete($id);
 public function afficherTout() {
 $products=$this->productsManager->view();
 //echo "<pre>",print_r($products),"</pre>"; 
-    require "./views/displayAll.php";
+    require "../views/displayAll.php";
 }
  public function afficherUn($id) {
     $product=$this->productsManager->view($id);
     //echo "<pre>",print_r($product),"</pre>"; 
-    require './views/displayOne.php';
+    require '../api/views/displayOne.php';
     
  }
 

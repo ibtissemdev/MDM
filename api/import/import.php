@@ -98,7 +98,7 @@ $maxCol=$sheet->getHighestColumn();
 
 print_r($fichier_a_traiter);
 $writer = new Xlsx($spreadsheet);
-$fichier_tpm='../archive/traite_'.date('y_m_d').'.xlsx';
+$fichier_tpm='../archive/traite_'.date('y_m_d_i').'.xlsx';
 print_r($fichier_tpm); 
 
     $writer->save($fichier_tpm);

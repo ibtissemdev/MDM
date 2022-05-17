@@ -47,6 +47,9 @@ ob_start(); ?>
 
 </form>
 </div>
+
+<button ><a href="api/export/export.php">Exporter</a></button>
+
 <table>
     <tr>
         <th>Visuel principal</th>
